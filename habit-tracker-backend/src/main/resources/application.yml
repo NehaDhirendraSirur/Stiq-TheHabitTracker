@@ -2,10 +2,11 @@ spring:
   application:
     name: habit-tracker
 
-#  datasource:
-#    url: jdbc:postgresql://localhost:5432/habit_tracker
-#    username: postgres
-#    password: postgres
+  datasource:
+    url: jdbc:postgresql://localhost:5432/habit_tracker
+    username: postgres
+    password: YOUR_DB_PASSWORD
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
@@ -23,4 +24,4 @@ server:
 
 springdoc:
   swagger-ui:
-    path: /swagger
+    path: /swagger-ui
