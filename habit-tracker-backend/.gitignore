@@ -32,9 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 
-# Spring config (local only)
-src/main/resources/application.yml
-
 # Environment files
 .env
 .env.*
