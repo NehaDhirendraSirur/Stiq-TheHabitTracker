@@ -35,6 +35,8 @@ build/
 # Spring config (local only)
 src/main/resources/application.yml
 
+habit-tracker-backend/pom.xml
+
 # Environment files
 .env
 .env.*
