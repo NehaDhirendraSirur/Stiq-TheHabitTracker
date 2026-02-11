@@ -36,6 +36,10 @@ public class DaySummary {
     @Column(name = "is_success_day", nullable = false)
     private Boolean isSuccessDay;
 
+    @Column(name = "freeze_used", nullable = false)
+    @Builder.Default
+    private Boolean freezeUsed = false;
+
     @Column(name = "overall_streak_after_day", nullable = false)
     private Integer overallStreakAfterDay;
 }

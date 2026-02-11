@@ -1,5 +1,6 @@
 package com.stiq.habittracker.entity;
 
+import com.stiq.habittracker.enums.HabitType;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;

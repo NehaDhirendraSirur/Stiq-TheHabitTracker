@@ -1,4 +1,4 @@
-package com.stiq.habittracker.entity;
+package com.stiq.habittracker.enums;
 
 public enum HabitType {
     BINARY,
