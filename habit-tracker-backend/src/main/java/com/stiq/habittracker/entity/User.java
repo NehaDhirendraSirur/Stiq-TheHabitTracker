@@ -41,9 +41,14 @@ public class User {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
+
     /* ===================== RELATIONS ===================== */
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Habit> habits;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
@@ -52,12 +57,15 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<DaySummary> daySummaries;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private StreakState streakState;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private GrowthState growthState;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<PointsLedger> pointsLedgers;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-    private GrowthState growthState;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private StreakFreezeWallet streakFreezeWallet;
 }

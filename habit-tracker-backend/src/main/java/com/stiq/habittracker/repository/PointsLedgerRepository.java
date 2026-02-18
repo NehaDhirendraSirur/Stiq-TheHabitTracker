@@ -12,4 +12,6 @@ public interface PointsLedgerRepository extends JpaRepository<PointsLedger, UUID
     List<PointsLedger> findByUser(User user);
 
     List<PointsLedger> findByUserOrderByCreatedAtDesc(User user);
+
+    boolean existsByUser_UserIdAndSourceRefId(UUID userId, UUID sourceRefId);
 }

@@ -8,8 +8,10 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "points_ledger")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class PointsLedger {
 
@@ -34,4 +36,9 @@ public class PointsLedger {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

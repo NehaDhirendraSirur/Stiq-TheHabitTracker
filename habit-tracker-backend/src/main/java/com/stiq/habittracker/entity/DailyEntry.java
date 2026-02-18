@@ -28,12 +28,14 @@ public class DailyEntry {
     @Column(nullable = false)
     private LocalDate date;
 
-    @Column(nullable = false)
-    private Double value;
-
     @Column(name = "is_completed", nullable = false)
     private Boolean isCompleted;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

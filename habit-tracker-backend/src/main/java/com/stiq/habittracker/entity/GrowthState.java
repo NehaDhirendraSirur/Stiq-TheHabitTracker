@@ -24,20 +24,30 @@ public class GrowthState {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private GrowthTheme theme;
+    @Builder.Default
+    private GrowthTheme theme = GrowthTheme.NATURE;
 
     @Column(nullable = false)
-    private Integer level;
+    @Builder.Default
+    private Integer level = 1;
 
     @Column(name = "total_points", nullable = false)
-    private Integer totalPoints;
+    @Builder.Default
+    private Integer totalPoints = 0;
 
     @Column(name = "visual_stage", nullable = false)
-    private Integer visualStage;
+    @Builder.Default
+    private Integer visualStage = 1;
 
     @Column(name = "custom_name")
     private String customName;
 
     @Column(name = "last_updated", nullable = false)
     private LocalDateTime lastUpdated;
+
+    @PrePersist
+    @PreUpdate
+    public void onUpdate() {
+        this.lastUpdated = LocalDateTime.now();
+    }
 }

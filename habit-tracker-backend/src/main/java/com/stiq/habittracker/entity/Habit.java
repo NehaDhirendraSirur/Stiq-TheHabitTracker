@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
-@Table(name = "habit")
+@Table(name = "habits")
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Builder
@@ -30,10 +30,10 @@ public class Habit {
     private HabitType type;
 
     @Column(name = "daily_target")
-    private Double dailyTarget;
+    private Double dailyTarget;     // optional (quantitative habits)
 
     @Column(name = "min_threshold")
-    private Double minThreshold;
+    private Double minThreshold;    // optional (quantitative habits)
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
@@ -41,9 +41,15 @@ public class Habit {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "habit")
+    @OneToMany(mappedBy = "habit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DailyEntry> dailyEntries = new ArrayList<>();
 
-    @OneToOne(mappedBy = "habit")
+    @OneToOne(mappedBy = "habit", cascade = CascadeType.ALL, orphanRemoval = true)
     private HabitStreak habitStreak;
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        if (this.isActive == null) this.isActive = true;
+    }
 }

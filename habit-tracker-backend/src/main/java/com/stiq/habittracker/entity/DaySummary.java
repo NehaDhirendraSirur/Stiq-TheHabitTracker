@@ -3,7 +3,7 @@ package com.stiq.habittracker.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "day_summary")
@@ -24,8 +24,7 @@ public class DaySummary {
     @Column(nullable = false)
     private LocalDate date;
 
-    @Column(name = "completed_habits", nullable = false)
-    private Integer completedHabits;
+    // ---------------- Metrics ----------------
 
     @Column(name = "active_habits", nullable = false)
     private Integer activeHabits;
@@ -42,4 +41,26 @@ public class DaySummary {
 
     @Column(name = "overall_streak_after_day", nullable = false)
     private Integer overallStreakAfterDay;
+
+    // ---------------- State (CRITICAL) ----------------
+
+    /** Habits successfully completed today */
+    @ElementCollection
+    @CollectionTable(
+            name = "day_completed_habits",
+            joinColumns = @JoinColumn(name = "day_id")
+    )
+    @Column(name = "habit_id")
+    @Builder.Default
+    private Set<UUID> completedHabits = new HashSet<>();
+
+    /** Habits failed/skipped today */
+    @ElementCollection
+    @CollectionTable(
+            name = "day_failed_habits",
+            joinColumns = @JoinColumn(name = "day_id")
+    )
+    @Column(name = "habit_id")
+    @Builder.Default
+    private Set<UUID> failedHabits = new HashSet<>();
 }

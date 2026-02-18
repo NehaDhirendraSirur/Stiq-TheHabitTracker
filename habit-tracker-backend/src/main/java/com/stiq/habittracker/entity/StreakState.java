@@ -22,10 +22,12 @@ public class StreakState {
     private User user;
 
     @Column(name = "current_overall_streak", nullable = false)
-    private Integer currentOverallStreak;
+    @Builder.Default
+    private Integer currentOverallStreak=0;
 
     @Column(name = "longest_overall_streak", nullable = false)
-    private Integer longestOverallStreak;
+    @Builder.Default
+    private Integer longestOverallStreak=0;
 
     @Column(name = "last_success_date")
     private LocalDate lastSuccessDate;

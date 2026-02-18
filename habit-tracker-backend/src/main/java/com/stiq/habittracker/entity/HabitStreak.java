@@ -22,10 +22,12 @@ public class HabitStreak {
     private Habit habit;
 
     @Column(name = "current_streak", nullable = false)
-    private Integer currentStreak;
+    @Builder.Default
+    private Integer currentStreak=0;
 
     @Column(name = "longest_streak", nullable = false)
-    private Integer longestStreak;
+    @Builder.Default
+    private Integer longestStreak=0;
 
     @Column(name = "last_completed_date")
     private LocalDate lastCompletedDate;
