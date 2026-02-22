@@ -5,7 +5,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/habit_tracker
     username: postgres
-    password: n12345
+    password: 1234
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -15,6 +15,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
   jackson:
     time-zone: UTC
@@ -29,4 +30,4 @@ springdoc:
 app:
   jwt:
     secret: ${JWT_SECRET}
-    expiration-ms: 8640000
+    expiration-ms: 86400000
