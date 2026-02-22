@@ -2,6 +2,7 @@ package com.stiq.habittracker.engine;
 
 import com.stiq.habittracker.entity.*;
 import com.stiq.habittracker.repository.*;
+import com.stiq.habittracker.service.DaySummaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,8 @@ public class StreakCalculationEngine {
     private final StreakStateRepository streakStateRepository;
     private final DaySummaryRepository daySummaryRepository;
     private final StreakFreezeWalletRepository freezeWalletRepository;
-    private final FreezeEngine freezeEngine;   // engine-to-engine call
+    private final FreezeEngine freezeEngine;
+    private final DaySummaryService daySummaryService;
 
     /**
      * Core streak evaluation for a day
@@ -96,16 +98,20 @@ public class StreakCalculationEngine {
         return streakStateRepository.save(streak);
     }
 
+//    public DaySummary buildDaySummary(User user, LocalDate date) {
+//        DaySummary summary = new DaySummary();
+//        summary.setUser(user);
+//        summary.setDate(date);
+//        summary.setActiveHabits(0);
+//        summary.setSuccessRatio(0.0);
+//        summary.setIsSuccessDay(false);
+//        summary.setOverallStreakAfterDay(0);
+//        summary.setFreezeUsed(false);
+//        return summary;
+//    }
+
     public DaySummary buildDaySummary(User user, LocalDate date) {
-        DaySummary summary = new DaySummary();
-        summary.setUser(user);
-        summary.setDate(date);
-        summary.setActiveHabits(0);
-        summary.setSuccessRatio(0.0);
-        summary.setIsSuccessDay(false);
-        summary.setOverallStreakAfterDay(0);
-        summary.setFreezeUsed(false);
-        return summary;
+        return daySummaryService.buildDaySummary(user, date);
     }
 
 }
