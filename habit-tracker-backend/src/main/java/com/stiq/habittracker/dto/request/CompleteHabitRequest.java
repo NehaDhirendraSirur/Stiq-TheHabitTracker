@@ -8,7 +8,7 @@ import java.util.UUID;
 @Data
 public class CompleteHabitRequest {
 
-    @NotNull(message = "Habit ID is required")
+//    @NotNull(message = "Habit ID is required")
     private UUID habitId;
 
     @NotNull(message = "Date is required")
