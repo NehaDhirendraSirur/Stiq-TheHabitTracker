@@ -4,12 +4,15 @@ import com.stiq.habittracker.dto.response.HabitStreakResponse;
 import com.stiq.habittracker.dto.response.StreakStateResponse;
 import com.stiq.habittracker.entity.*;
 import com.stiq.habittracker.exception.ResourceNotFoundException;
+import com.stiq.habittracker.mapper.StreakMapper;
 import com.stiq.habittracker.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
+// StreakService.java — updated
 @Service
 @RequiredArgsConstructor
 public class StreakService {
@@ -18,81 +21,39 @@ public class StreakService {
     private final HabitStreakRepository habitStreakRepository;
     private final HabitRepository habitRepository;
     private final UserService userService;
-
-    // -------------------- Overall Streak --------------------
+    private final StreakMapper streakMapper;
 
     public StreakStateResponse getOverallStreak() {
         User user = userService.getCurrentUser();
-
         StreakState streakState = streakStateRepository
                 .findByUser(user)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Streak state not found for user: " + user.getUserId()
-                ));
-
-        return toStreakStateResponse(streakState);
+                        "Streak state not found for user: " + user.getUserId()));
+        return streakMapper.toStreakStateResponse(streakState);
     }
-
-    // -------------------- Habit Streaks --------------------
 
     public List<HabitStreakResponse> getAllHabitStreaks() {
         User user = userService.getCurrentUser();
-
         return habitRepository.findByUserAndIsActiveTrue(user)
                 .stream()
                 .map(habit -> habitStreakRepository
                         .findByHabit(habit)
-                        .map(streak -> toHabitStreakResponse(habit, streak))
-                        .orElse(emptyHabitStreakResponse(habit))
+                        .map(streak -> streakMapper.toHabitStreakResponse(habit, streak))
+                        .orElse(streakMapper.toEmptyHabitStreakResponse(habit))
                 )
                 .toList();
     }
 
-    public HabitStreakResponse getHabitStreak(java.util.UUID habitId) {
+    public HabitStreakResponse getHabitStreak(UUID habitId) {
         User user = userService.getCurrentUser();
-
         Habit habit = habitRepository.findById(habitId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Habit not found: " + habitId
-                ));
-
+                .orElseThrow(() -> new ResourceNotFoundException("Habit not found: " + habitId));
         if (!habit.getUser().getUserId().equals(user.getUserId())) {
             throw new ResourceNotFoundException("Habit not found: " + habitId);
         }
-
         return habitStreakRepository
                 .findByHabit(habit)
-                .map(streak -> toHabitStreakResponse(habit, streak))
-                .orElse(emptyHabitStreakResponse(habit));
-    }
-
-    // -------------------- Mappers --------------------
-
-    private StreakStateResponse toStreakStateResponse(StreakState state) {
-        return StreakStateResponse.builder()
-                .currentOverallStreak(state.getCurrentOverallStreak())
-                .longestOverallStreak(state.getLongestOverallStreak())
-                .lastSuccessDate(state.getLastSuccessDate())
-                .build();
-    }
-
-    private HabitStreakResponse toHabitStreakResponse(Habit habit, HabitStreak streak) {
-        return HabitStreakResponse.builder()
-                .habitId(habit.getHabitId())
-                .habitName(habit.getName())
-                .currentStreak(streak.getCurrentStreak())
-                .longestStreak(streak.getLongestStreak())
-                .lastCompletedDate(streak.getLastCompletedDate())
-                .build();
-    }
-
-    private HabitStreakResponse emptyHabitStreakResponse(Habit habit) {
-        return HabitStreakResponse.builder()
-                .habitId(habit.getHabitId())
-                .habitName(habit.getName())
-                .currentStreak(0)
-                .longestStreak(0)
-                .lastCompletedDate(null)
-                .build();
+                .map(streak -> streakMapper.toHabitStreakResponse(habit, streak))
+                .orElse(streakMapper.toEmptyHabitStreakResponse(habit));
     }
 }

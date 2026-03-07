@@ -2,6 +2,7 @@ package com.stiq.habittracker.service;
 
 import com.stiq.habittracker.dto.response.PointsLedgerResponse;
 import com.stiq.habittracker.entity.*;
+import com.stiq.habittracker.mapper.PointsMapper;
 import com.stiq.habittracker.repository.PointsLedgerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,37 +15,21 @@ public class PointsService {
 
     private final PointsLedgerRepository pointsLedgerRepository;
     private final UserService userService;
-
-    // -------------------- Fetch --------------------
+    private final PointsMapper pointsMapper;
 
     public List<PointsLedgerResponse> getPointsHistory() {
         User user = userService.getCurrentUser();
-
         return pointsLedgerRepository
                 .findByUserOrderByCreatedAtDesc(user)
-                .stream()
-                .map(this::toResponse)
-                .toList();
+                .stream().map(pointsMapper::toResponse).toList();
     }
 
     public Integer getTotalPoints() {
         User user = userService.getCurrentUser();
-
         return pointsLedgerRepository
                 .findByUser(user)
                 .stream()
                 .mapToInt(PointsLedger::getPoints)
                 .sum();
-    }
-
-    // -------------------- Mapper --------------------
-
-    private PointsLedgerResponse toResponse(PointsLedger ledger) {
-        return PointsLedgerResponse.builder()
-                .ledgerId(ledger.getLedgerId())
-                .source(ledger.getSource())
-                .points(ledger.getPoints())
-                .createdAt(ledger.getCreatedAt())
-                .build();
     }
 }
